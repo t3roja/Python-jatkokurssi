@@ -2,34 +2,44 @@ import threading
 import concurrent.futures as cf
 import time
 
+count = 0
+
 
 def external_function():
-    #Implement
-    pass
+    global count
+    count += 1
+
 
 def external_count():
-    #Implement
-    pass
+    global count
+    return count
 
 #Sample function for test purposes
 def computing5s(thr_id):
-    time.sleep(5)
+    time.sleep(1)
     external_function()
             
     return thr_id, thr_id*thr_id
 
-def init_values(f):
-    f_values={}
 
-    #Between BEGIN and END there is too slow solution.
-    #Rewrite the solution to utilize parallelism
-    #
-    #BEGIN
-    for i in range(50):
+def init_values(f):
+
+    """
+        for i in range(50):
         idx, val=f(i)
         f_values[idx]=val
-    #END
-    
+    """
+def init_values(f):
+    f_values = {}
+    with cf.ProcessPoolExecutor() as executor:
+        futures = {executor.submit(f, i): i for i in range(50)}
+        for future in cf.as_completed(futures):
+            idx = futures[future]
+            try:
+                _, val = future.result()
+                f_values[idx] = val
+            except Exception as e:
+                print(f"Thread {idx} generated an exception: {e}")
     return f_values
 
 
@@ -37,3 +47,4 @@ def init_values(f):
 if __name__ == "__main__":
     ret=init_values(computing5s)
     print(ret)
+
