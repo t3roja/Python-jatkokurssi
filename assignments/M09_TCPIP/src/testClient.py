@@ -9,21 +9,6 @@ serverPort=7538
 buffSize=1024
 
 
-#Write your code here!
-UDPSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-UDPSocket.bind((localIP, serverPort))
-
-print('UDP server up and listening')
-
-while True:
-
-    byteAdressPair = UDPSocket.recvfrom(buffSize)
-    message = byteAdressPair[0]
-    adress = byteAdressPair[1]
-    message = message.decode()
-    rndm = random.randint(0, int(message)-1)
-    print("Randomized number: ", rndm)
-    UDPSocket.sendto(str(rndm).encode(), adress)
 
 #You can utilize following client for test purposes
 def client_main():
@@ -44,7 +29,7 @@ def client_main():
     UDPSocket.close()
 
 #Set True to run the clients
-run_client=False
+run_client=True
 
 if run_client:
     th_list=[]
@@ -55,3 +40,4 @@ if run_client:
     for th in th_list:
         th.join()
 
+client_main()

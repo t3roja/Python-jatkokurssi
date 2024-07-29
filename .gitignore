@@ -1,0 +1,5 @@
+tests/
+*test.py
+helpers/
+*pack.py
+*testall.py

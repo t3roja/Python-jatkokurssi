@@ -29,18 +29,19 @@ def init_values(f):
         idx, val=f(i)
         f_values[idx]=val
     """
+
 def init_values(f):
     f_values = {}
-    with cf.ProcessPoolExecutor() as executor:
+
+    with cf.ThreadPoolExecutor() as executor:
         futures = {executor.submit(f, i): i for i in range(50)}
+
         for future in cf.as_completed(futures):
-            idx = futures[future]
-            try:
-                _, val = future.result()
-                f_values[idx] = val
-            except Exception as e:
-                print(f"Thread {idx} generated an exception: {e}")
+            idx, val = future.result()
+            f_values[idx] = val
+
     return f_values
+
 
 
 #Test software under this if        
